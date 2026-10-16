@@ -1,0 +1,60 @@
+<h1>つぶやきアプリ</h1>
+
+<% if session[:login_uid] %>
+  <p>
+    ログイン中：<%= session[:login_uid] %>
+    <%= link_to 'ログアウト', top_logout_path %>
+  </p>
+
+  <%= form_with url: tweets_path do |f| %>
+    <%= f.text_field :message, placeholder: 'つぶやきを入力' %>
+    <%= f.submit '投稿' %>
+  <% end %>
+<% else %>
+  <h2>ログイン</h2>
+
+  <%= form_with url: top_login_path do |f| %>
+    <p>
+      ユーザーID
+      <%= f.text_field :uid %>
+    </p>
+    <p>
+      パスワード
+      <%= f.password_field :pass %>
+    </p>
+    <%= f.submit 'ログイン' %>
+  <% end %>
+
+  <%= link_to 'ユーザー登録', new_user_path %>
+<% end %>
+
+<hr>
+
+<h2>ツイート一覧</h2>
+
+<% @tweets.each do |tweet| %>
+  <div>
+    <p>
+      <strong><%= tweet.user.uid %></strong>
+      ：<%= tweet.message %>
+    </p>
+
+    <p>
+      いいね数：<%= tweet.likes.count %>
+    </p>
+
+    <% if session[:login_uid] %>
+      <% user = User.find_by(uid: session[:login_uid]) %>
+      <% like = tweet.likes.find_by(user_id: user.id) %>
+
+      <% if like %>
+        <%= link_to 'いいね削除', like_path(like),
+            data: { turbo_method: :delete } %>
+      <% else %>
+        <%= link_to 'いいね', likes_path(tweet_id: tweet.id),
+            data: { turbo_method: :post } %>
+      <% end %>
+    <% end %>
+  </div>
+  <hr>
+<% end %>

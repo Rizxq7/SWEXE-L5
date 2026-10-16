@@ -1,0 +1,22 @@
+<h1>ユーザー登録</h1>
+
+<%= form_with url: users_path do |f| %>
+  <p>
+    ユーザーID
+    <%= f.text_field :uid %>
+  </p>
+
+  <p>
+    パスワード
+    <%= f.password_field :pass %>
+  </p>
+
+  <p>
+    年齢
+    <%= f.number_field :age %>
+  </p>
+
+  <%= f.submit '登録' %>
+<% end %>
+
+<%= link_to '戻る', root_path %>

@@ -1,4 +1,19 @@
+
 <h1>ユーザー登録</h1>
+
+<% if flash[:alert] %>
+  <p style="color: red;">
+    <%= flash[:alert] %>
+  </p>
+<% end %>
+
+<% if @user.errors.any? %>
+  <ul style="color: red;">
+    <% @user.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <%= form_with url: users_path do |f| %>
   <p>
@@ -8,7 +23,12 @@
 
   <p>
     パスワード
-    <%= f.password_field :pass %>
+    <%= f.password_field :password %>
+  </p>
+
+  <p>
+    パスワード（確認）
+    <%= f.password_field :password_confirmation %>
   </p>
 
   <p>
